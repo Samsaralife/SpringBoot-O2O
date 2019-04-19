@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cugb.dao.ProductMapper">
+	<!-- 结果映射集，如果数据库中字段与实体类中的属性不一致时建议这么做 -->
+	<resultMap type="com.cugb.entity.Product" id="ProductMapper">
+		<id column="product_id" property="productId"/>
+		<result column="product_name" property="productName"/>
+		<result column="product_desc" property="productDesc"/>
+		<result column="img_addr" property="imgAddr"/>
+		<result column="normal_price" property="normalPrice"/>
+		<result column="priority" property="priority"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="enable_status" property="enableStatus"/>
+		<result column="promotion_price" property="promotionPrice"/>
+		<association property="productCategory" column="product_category_id" javaType="com.cugb.entity.ProductCategory">
+			<id column="product_category_id" property="productCategoryId"/>
+			<result column="product_category_name" property="productCategoryName"/>
+		</association>
+		<association property="shop" column="shop_id" javaType="com.cugb.entity.Shop">
+			<id column="shop_id" property="shopId"/>
+			<result column="owner_id" property="userId"/>
+			<result column="shop_name" property="shopName"/>
+		</association>
+	</resultMap>
+	<select id="queryProductById" parameterType="long" resultMap="ProductMapper">
+		select 
+		p.product_id,
+		p.product_name,
+		p.product_desc,
+		p.normal_price,
+		p.priority,
+		p.create_time,
+		p.update_time,
+		p.enable_status,
+		p.product_category_id,
+		p.shop_id,
+		p.promotion_price
+		from 
+		tb_product p
+		where
+		p.product_id = #{productId}
+		order by priority DESC
+	</select>
+	<update id="updateProduct" parameterType="com.cugb.entity.Product">
+		update tb_product
+		<set>
+			<if test="productName != null">product_name=#{productName},</if>
+			<if test="productDesc != null">product_desc=#{productDesc},</if>
+			<if test="imgAddr != null">img_addr = #{imgAddr},</if>
+			<if test="normalPrice != null">normal_price = #{normalPrice},</if>
+			<if test="priority !=null">priority = #{priority},</if>
+			<if test="createTime != null">create_time = #{createTime},</if>
+			<if test="updateTime != null">update_time = #{updateTime},</if>
+			<if test="enableStatus != null">enable_status = #{enableStatus},</if>
+			<if test="productCategory != null and productCategory.productCategoryId !=null">
+				product_category_id = #{productCategory.productCategoryId},
+			</if>
+			<if test="promotionPrice != null">promotion_price=#{promotionPrice}</if>
+		</set>
+		where product_id = #{productId}
+		and shop_id = #{shop.shopId}
+	</update>
+	<delete id="deleteProductImgByProductId">
+		delete from tb_product_img
+		where product_id = #{productId}
+	</delete>
+	<insert id="insertProduct" parameterType="com.cugb.entity.Product"
+	useGeneratedKeys="true" keyColumn="product_id" keyProperty="productId">
+		insert into tb_product(product_name,
+		product_desc,
+		normal_price,
+		priority,
+		create_time,
+		update_time,
+		enable_status,
+		product_category_id,
+		shop_id,
+		promotion_price) 
+		values(
+		#{productName},
+		#{productDesc},
+		#{normalPrice},
+		#{priority},
+		#{createTime},
+		#{updateTime},
+		#{enabelStatus},
+		#{productCategory.productCategoryId},
+		#{shop.shopId},
+		#{promotionPrice}
+		)
+	</insert>
+</mapper>

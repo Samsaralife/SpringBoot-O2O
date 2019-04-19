@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cugb.dao.HeadLineMapper">
+	<resultMap type="com.cugb.entity.HeadLine" id="HeadLineMapper">
+		<id column="line_id" property="lineId"/>
+		<result column="line_name" property="lineName"/>
+		<result column="line_link" property="lineLink"/>
+		<result column="line_img" property="lineImg"/>
+		<result column="priority" property="priority"/>
+		<result column="enable_status" property="enableStatus"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	<select id="queryHeadLine" resultMap="HeadLineMapper">
+		select line_id,
+		line_name,
+		line_link,
+		line_img,
+		priority,
+		enable_status,
+		create_time,
+		update_time
+		from
+		tb_head_line
+		<where>
+			<if test="headLineCondition.enableStatus!=null">
+				and enable_status = #{headLineCondition.enableStatus}
+			</if>
+		</where>
+		order by priority DESC
+	</select>
+</mapper>

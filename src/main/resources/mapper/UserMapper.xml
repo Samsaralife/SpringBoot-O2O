@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cugb.dao.UserMapper">
+	<resultMap type="com.cugb.entity.User" id="UserMapper">
+		<id column="user_id" property="id"/>
+		<result column="user_name" property="username"/>
+		<result column="password" property="password"/>
+		<result column="role" property="role"/>
+	</resultMap>
+	<select id="loginByUserNameAndPwd" resultMap="UserMapper" parameterType="map">
+		select user_id,user_name,password,role 
+		from tb_user
+		<where>
+			<if test="username !=null and password!=null">
+				user_name = #{username} and password = #{password}
+			</if>
+		</where>
+	</select>
+	<select id="findUserByName" resultMap="UserMapper" parameterType="String">
+		select user_id,user_name,password,role
+		from tb_user where user_name like '%${username}%'
+	</select>
+	<insert id="InsertUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.cugb.entity.User" >
+		insert into tb_user(user_name,password,role,create_time,update_time)
+		values(#{username},#{password},#{role},#{createTime},#{updateTime})
+	</insert>
+	<select id="findUserById" parameterType="int" resultMap="UserMapper">
+		select user_name, password, role,create_time, update_time from tb_user 
+		where user_id=#{id}
+	</select>
+	<update id="updateUser" parameterType="com.cugb.entity.User" >
+		update tb_user 
+		<set>
+			<if test="username != null">
+				user_name = #{username},
+			</if>
+			<if test="password != null">
+				password = #{password},
+			</if>
+			<if test="role != null">
+				role = #{role},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime}
+			</if>
+		</set>
+			where user_id = #{id}
+	</update>
+	<delete id="deleteUserByid" parameterType="int">
+		delete from tb_user where user_id = #{id}
+	</delete>
+</mapper>

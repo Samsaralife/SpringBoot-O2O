@@ -1,0 +1,17 @@
+.row-shop {
+	border: 1px solid #999;
+	padding .5rem;
+	border-bottom:none;
+}
+
+.row-shop.last-child {
+	border-bottom:1px solid #999;
+}
+.shop-name {
+	white-space:nowrap;
+	overflow-x:scroll;
+}
+.shop-wrap a link:link{color:blue;text-decoration:none;}
+.shop-wrap a link:visited{color:purple;text-decoration:none;}
+.shop-wrap a link:active{color:red}
+.shop-wrap a ling:hover{color:red;text-decoration:underline;}
